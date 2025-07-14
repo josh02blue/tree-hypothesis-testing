@@ -20,7 +20,7 @@ from subprocess import *
 # directory for output with / at end
 #OUTDIR = "/Users/megan/Dropbox/RESEARCH/AIM_Square/BHVSummaries/BHV-contours/simulations_for_paper_fall2024/parameters_from_file_names/anomaly_tauAB_10000_tauABC_20000_tauRoot_20100_(x0.01_y1)/"
 #OUTDIR = "/Users/megan/Dropbox/RESEARCH/AIM_Square/BHVSummaries/BHV-contours/simulations_for_paper_fall2024/for_R/star/"
-OUTDIR = "/Users/megan/Dropbox/service_and_work_admin/career_REU/2025_cohort/data/"
+OUTDIR = "output/"
 
 SIMULATE_GENE_TREES = True      # set to false if using an existing gene tree file
                                 # Taxa will be A, B, C, D
@@ -72,18 +72,18 @@ mu = (0.94*10**(-9))
 # TAU3 = 300    # tauRoot for both 
 
 POP_SIZE = 10000  # default population size
-# N1 = 1000000      # pAB for both
-# N2 = 1000000      # pABC for CAT; pCD for BAL
-# N3= 1000000       # pRoot for both
+N1 = 10_000      # pAB for both
+N2 = 10_000       # pABC for CAT; pCD for BAL
+N3= 10_000        # pRoot for both
 
-NUM_GENE_TREES = 10000
+NUM_GENE_TREES = 10_000
 
-TAU1 = 4.22*10**(-3)/mu  # above S and B
-TAU2 = 4.255*10**(-3)/mu   # above S,B,N
-TAU3 = 4.2775*10**(-3)/mu
-N1 = 2.4*10**(-3)/mu/2 # above S and B
-N2 = 2.355*10**(-3)/mu/2 # above S, B, N
-N3 = 2.5*10**(-3)/mu/2
+TAU1 = 10000   # above S and B
+TAU2 = 10100    # above S,B,N
+TAU3 = 11100
+#N1 = 2.4*10**(-3)/mu/2 # above S and B
+#N2 = 2.355*10**(-3)/mu/2 # above S, B, N
+#N3 = 2.5*10**(-3)/mu/2
 
 
 #####################################################
@@ -103,6 +103,10 @@ N3 = 2.5*10**(-3)/mu/2
 ############################################################
 
 def main():
+    
+    # Ensure output directory exists
+    if not os.path.exists(OUTDIR):
+        os.makedirs(OUTDIR)
 
     # Simulate the gene trees, if desired
     if (SIMULATE_GENE_TREES):
@@ -139,11 +143,12 @@ def main():
     # and each column representing a clade and containing the edge length in the tree
     ####################################################################################
 
-    if not os.path.exists(csv_file):
-        newick_to_csv(gene_tree_file, csv_file, character_btw_taxa = char_btw_taxa, taxa_list = taxa_list)
+    #Uncomment if you want csv file
+    # if not os.path.exists(csv_file):
+    #     newick_to_csv(gene_tree_file, csv_file, character_btw_taxa = char_btw_taxa, taxa_list = taxa_list)
 
-    else:
-        print("Skipping generating CSV file of edge lengths -",csv_file,"already exists")
+    # else:
+    #     print("Skipping generating CSV file of edge lengths -",csv_file,"already exists")
 
 
     ######################################################################################
@@ -448,8 +453,8 @@ def newick_to_csv(in_trees,csv_file,character_btw_taxa = "-", in_trees_are_file 
 #####################################################################################
 
 def compute_frechet_mean(tree_file, frechet_mean_file):
-    command = "java -jar " + JAR_FILE + " -a rand_perm -o " + frechet_mean_file + " -c 10 -e 0.000001 -n 5000000 " + tree_file
-    print("Calling: " + command)
+    command = "java -jar " + JAR_FILE + " -a rand_perm -o " + frechet_mean_file + " -c 10 -e 1.0 -n 1000000 " + tree_file
+    #print("Calling: " + command)
     call(command.split())
 
 ########################################################################
@@ -461,15 +466,21 @@ def compute_frechet_mean(tree_file, frechet_mean_file):
 # and store the edge length information in a CSV file.
 #########################################################################
 
-def extract_frechet_mean(frechet_mean_file, mean_csv, character_btw_taxa = "-", taxa_list = None):
+def extract_frechet_mean(frechet_mean_file,mean_csv = None, character_btw_taxa = "-", taxa_list = None):
     with open(frechet_mean_file,'r') as fin:
         all_lines = fin.readlines()
-    mean_tree = all_lines[4]   # get the fifth line in the Frechet mean file
+    
+    #extract last line in Frechet mean file
+    for line in reversed(all_lines):
+        line = line.strip()
+        if line.startswith("(") and line.endswith(";"):
+            return line
 
-    newick_to_csv(mean_tree,mean_csv,in_trees_are_file = False, character_btw_taxa = character_btw_taxa, taxa_list = taxa_list)
+    raise ValueError("No valid Newick tree found in the Frechet mean file.")
 
+    #Uncomment if you want csv file
+    #newick_to_csv(mean_tree,in_trees_are_file = False, character_btw_taxa = character_btw_taxa, taxa_list = taxa_list)
 
-###########################################################################
 #
 #  Scale tree edge lengths
 #
