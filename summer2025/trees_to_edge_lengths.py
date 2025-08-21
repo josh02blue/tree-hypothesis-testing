@@ -79,8 +79,8 @@ N3= 10_000        # pRoot for both
 NUM_GENE_TREES = 10_000
 
 TAU1 = 10000   # above S and B
-TAU2 = 10100    # above S,B,N
-TAU3 = 11100
+TAU2 = 10500    # above S,B,N
+TAU3 = 11000
 #N1 = 2.4*10**(-3)/mu/2 # above S and B
 #N2 = 2.355*10**(-3)/mu/2 # above S, B, N
 #N3 = 2.5*10**(-3)/mu/2
