@@ -3,7 +3,7 @@
 This module wraps the Java geodesic BHV distance implementation in `gtp.jar`
 and exposes a simple Python function:
 
-- `compute_bhv_distance(tree1, tree2, rooted=True) -> float`
+- `bhv_distance(tree1, tree2, rooted=True) -> float`
 
 ### Requirements
 
@@ -15,10 +15,10 @@ and exposes a simple Python function:
 ### Usage
 
 ```python
-from bhv_jpype import ensure_jvm, compute_bhv_distance, shutdown_jvm
+from bhv_jpype import ensure_jvm, bhv_distance, shutdown_jvm
 
 ensure_jvm()
-d = compute_bhv_distance("(A,(B,C));", "((A,B),C);", rooted=True)
+d = bhv_distance("(A,(B,C));", "((A,B),C);", rooted=True)
 print(d)
 shutdown_jvm()
 ```
