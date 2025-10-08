@@ -6,7 +6,7 @@ a pipeline with BHV (gtp.jar).
 
 ## Files
 
-- `frechet_jpype.py` — importable module (start/stop JVM + `frechet_mean_jpype`)
+- `frechet_jpype.py` — importable module (start/stop JVM + `frechet_mean`)
 - `example_frechet.py` — tiny example that prints a mean tree
 
 ## Requirements
