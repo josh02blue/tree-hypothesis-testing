@@ -41,7 +41,7 @@ def shutdown_jvm():
         Java object if return_java=True, otherwise a Newick string (ends with ';').
     """
 
-def frechet_mean_jpype(trees, num_iter=10000, cauchy_len=10, epsilon=0.05,
+def frechet_mean(trees, num_iter=10000, cauchy_len=10, epsilon=0.05,
                        outfile=None, display_iter=0, display_start=1,
                        return_java=False):
     

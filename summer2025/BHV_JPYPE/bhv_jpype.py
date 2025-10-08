@@ -49,7 +49,7 @@ Raises
 ------
 Java exceptions (via JPype) if input Newick strings are malformed.
 """
-def compute_bhv_distance(tree1, tree2, rooted=True):
+def bhv_distance(tree1, tree2, rooted=True):
     
     ensure_jvm()
     PolyMain = jpype.JClass("polyAlg.PolyMain")
